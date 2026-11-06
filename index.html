@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Já Tem · Abre a geladeira. Já tem jantar.</title>
+<meta name="description" content="O Já Tem mostra o que dá pra fazer com o que você tem em casa, monta o cardápio da semana e a lista de compras da família. Entre na lista de espera.">
+<meta property="og:title" content="Já Tem · Abre a geladeira. Já tem jantar.">
+<meta property="og:description" content="Menos delivery, menos desperdício, menos gasto no mercado. Entre na lista de espera.">
+<meta property="og:image" content="https://jatemapp.github.io/og.png">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#16432B">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Instrument+Sans:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: página única — hero com formulário + celular animado; depois seções empilhadas em largura de leitura */
+:root{
+  --bg:#F5F7EF; --surface:#FFFFFF; --ink:#16201A; --muted:#5B6758; --line:#DDE4D3;
+  --green:#16432B; --green-2:#1F6B42; --leaf:#CFE8B8;
+  --tomato:#E5462C; --yolk:#FFC53D; --cream-ink:#3A2A00;
+  --f-display:"Bricolage Grotesque",system-ui,sans-serif;
+  --f-body:"Instrument Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 var(--f-body);padding-top:env(safe-area-inset-top,0px)}
+img{max-width:100%}
+h1,h2,h3{font-family:var(--f-display);font-weight:800;line-height:1.02;letter-spacing:-.02em;margin:0;text-wrap:balance}
+a{color:var(--green-2)}
+.wrap{max-width:1120px;margin:0 auto;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}
+.eyebrow{font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--green-2)}
+:focus-visible{outline:3px solid var(--yolk);outline-offset:2px}
+
+/* topo */
+.top{display:flex;align-items:center;justify-content:space-between;padding-block:18px}
+.logo{display:flex;align-items:center;gap:10px;font-family:var(--f-display);font-weight:800;font-size:26px;color:var(--green);text-decoration:none;letter-spacing:-.02em}
+.logo svg{width:38px;height:38px}
+.top a.cta-sm{font-weight:700;text-decoration:none;background:var(--green);color:#fff;padding:10px 16px;border-radius:999px;font-size:15px}
+
+/* hero */
+.hero{display:grid;gap:36px;padding-block:24px 56px;align-items:center}
+@media (min-width:900px){.hero{grid-template-columns:1.1fr .9fr;padding-block:40px 80px}}
+.hero h1{font-size:clamp(44px,8vw,86px);color:var(--green)}
+.hero h1 em{font-style:normal;color:var(--tomato);white-space:nowrap}
+.lead{font-size:clamp(17px,2.2vw,20px);color:var(--muted);max-width:34em;margin:18px 0 26px}
+.pills{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 26px;padding:0;list-style:none}
+.pills li{background:var(--leaf);color:var(--green);font-weight:700;font-size:14px;padding:6px 12px;border-radius:999px}
+
+/* formulário */
+.form{background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:20px;display:grid;gap:12px;max-width:520px;box-shadow:0 10px 0 var(--leaf)}
+.form h2{font-size:22px;color:var(--ink)}
+.row2{display:grid;gap:12px}
+@media (min-width:560px){.row2{grid-template-columns:1fr 1fr}}
+.field{display:grid;gap:5px;min-width:0}
+.field label{font-size:14px;font-weight:600}
+.field input,.field select{font:inherit;color:inherit;border:1.5px solid var(--line);background:var(--bg);border-radius:12px;padding:11px 14px;min-height:48px;width:100%}
+.field input:focus,.field select:focus{border-color:var(--green-2);outline:none}
+.consent{display:flex;gap:10px;align-items:flex-start;font-size:13.5px;color:var(--muted)}
+.consent input{width:20px;height:20px;margin-top:1px;accent-color:var(--green-2);flex:none}
+.btn{font:inherit;font-weight:700;font-size:17px;border:0;border-radius:14px;padding:14px 20px;min-height:52px;cursor:pointer;background:var(--tomato);color:#fff;box-shadow:0 4px 0 #A82F1B;transition:transform .1s}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 #A82F1B}
+.btn[disabled]{opacity:.7;cursor:wait}
+.err{color:#B3261E;font-size:14px;font-weight:600;margin:0}
+.small{font-size:13px;color:var(--muted);margin:0}
+.done{text-align:left}
+.done h2{color:var(--green);font-size:28px}
+.done p{margin:8px 0}
+.share{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+.share a,.share button{font:inherit;font-weight:700;text-decoration:none;border-radius:12px;padding:12px 16px;border:1.5px solid var(--green);color:var(--green);background:transparent;cursor:pointer}
+.share a.wa{background:var(--green);color:#fff}
+
+/* celular demo */
+.phone-wrap{display:flex;justify-content:center}
+.phone{width:min(330px,86vw);aspect-ratio:9/18.5;background:var(--green);border-radius:44px;padding:12px;box-shadow:0 30px 60px -20px rgba(22,67,43,.45);position:relative}
+.screen{background:var(--bg);border-radius:34px;height:100%;overflow:hidden;position:relative;display:flex;flex-direction:column}
+.scr-top{background:var(--green);color:#fff;padding:20px 18px 14px;font-family:var(--f-display);font-weight:800;font-size:20px}
+.scr-top small{display:block;font-family:var(--f-body);font-weight:500;font-size:12px;opacity:.8}
+.scr-body{padding:14px;display:flex;flex-direction:column;gap:10px;flex:1}
+.scr-label{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:5px 10px;font-size:13px;font-weight:600;opacity:0;transform:translateY(6px);animation:pop .4s forwards}
+.chip.warn{border-color:var(--yolk);background:#FFF4D4}
+.idea{background:var(--surface);border-radius:16px;padding:12px;border:1px solid var(--line);opacity:0;animation:pop .5s forwards}
+.idea b{display:block;font-size:15px}
+.idea span{font-size:12.5px;color:var(--muted)}
+.idea .ok{display:inline-block;margin-top:6px;background:var(--leaf);color:var(--green);font-size:11.5px;font-weight:700;padding:3px 8px;border-radius:999px}
+.list{background:var(--yolk);color:var(--cream-ink);border-radius:16px;padding:10px 12px;font-size:13px;font-weight:600;opacity:0;animation:pop .5s forwards}
+@keyframes pop{to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.chip,.idea,.list{animation:none;opacity:1;transform:none}html{scroll-behavior:auto}}
+.demo-cap{text-align:center;font-size:13px;color:var(--muted);margin-top:12px}
+
+/* seções */
+section.blk{padding-block:56px;border-top:1px solid var(--line)}
+section.blk h2{font-size:clamp(32px,4.6vw,48px);color:var(--green);max-width:18ch}
+.steps{display:grid;gap:16px;margin-top:28px;counter-reset:s}
+@media (min-width:760px){.steps{grid-template-columns:repeat(3,1fr)}}
+.step{background:var(--surface);border-radius:20px;padding:22px;border:1px solid var(--line)}
+.step::before{counter-increment:s;content:counter(s);display:grid;place-items:center;width:40px;height:40px;border-radius:50%;background:var(--tomato);color:#fff;font-family:var(--f-display);font-weight:800;font-size:20px;margin-bottom:14px}
+.step h3{font-size:22px;margin-bottom:6px}
+.step p{margin:0;color:var(--muted)}
+.nums{display:grid;gap:16px;margin-top:28px}
+@media (min-width:760px){.nums{grid-template-columns:repeat(3,1fr)}}
+.num{background:var(--green);color:#fff;border-radius:20px;padding:24px}
+.num b{display:block;font-family:var(--f-display);font-size:clamp(40px,6vw,56px);line-height:1;color:var(--yolk)}
+.num p{margin:10px 0 0;font-size:15px;opacity:.92}
+.num a{color:#fff;opacity:.7;font-size:12.5px}
+.who{display:grid;gap:12px;margin-top:28px}
+@media (min-width:760px){.who{grid-template-columns:repeat(2,1fr)}}
+.who div{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:18px 20px}
+.who b{font-family:var(--f-display);font-size:20px;display:block;margin-bottom:4px;color:var(--ink)}
+.who p{margin:0;color:var(--muted)}
+.founder{background:var(--yolk);color:var(--cream-ink);border-radius:26px;padding:clamp(24px,5vw,44px);display:grid;gap:16px;align-items:center}
+@media (min-width:800px){.founder{grid-template-columns:1.4fr auto}}
+.founder h2{color:var(--cream-ink)!important}
+.founder p{margin:8px 0 0;font-size:17px}
+.founder a{background:var(--green);color:#fff;text-decoration:none;font-weight:700;padding:14px 22px;border-radius:14px;text-align:center}
+details{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px 18px;margin-top:10px}
+summary{font-weight:700;cursor:pointer;font-size:17px}
+details p{margin:10px 0 0;color:var(--muted)}
+.faq{max-width:760px;margin-top:24px}
+footer{padding-block:40px calc(40px + env(safe-area-inset-bottom,0px));color:var(--muted);font-size:14px;border-top:1px solid var(--line)}
+footer .wrap{display:grid;gap:8px}
+</style>
+</head>
+<body>
+<header class="wrap top">
+  <a class="logo" href="#"><svg viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" rx="12" fill="#16432B"/><path d="M11 21.5l6 6 12-14" fill="none" stroke="#FFC53D" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Já Tem</a>
+  <a class="cta-sm" href="#lista">Entrar na lista</a>
+</header>
+
+<main>
+<div class="wrap hero">
+  <div>
+    <p class="eyebrow">Em breve · lista de espera aberta</p>
+    <h1>Abre a geladeira. <em>Já tem</em> jantar.</h1>
+    <p class="lead">O Já Tem mostra o que dá pra fazer com o que você tem em casa, monta o cardápio da semana e a lista de compras da família. Sem nutricionista, sem planilha, sem pedir delivery por falta de ideia.</p>
+    <ul class="pills"><li>Menos delivery</li><li>Menos desperdício</li><li>Menos gasto no mercado</li></ul>
+
+    <form class="form" id="lista" method="POST" action="https://docs.google.com/forms/d/e/1FAIpQLSfY1BuzwPqIGz_ov9JzpzOEsB88oDQRBIxZKMblCTgVQ1_0Ew/formResponse" novalidate>
+      <input type="hidden" name="entry.1590706119" id="f-origem">
+      <p hidden><label>Não preencha: <input name="empresa" id="f-hp" tabindex="-1" autocomplete="off"></label></p>
+      <h2>Entre na lista e ganhe o preço de fundador</h2>
+      <div class="row2">
+        <div class="field"><label for="f-nome">Seu nome</label><input id="f-nome" name="entry.558043367" autocomplete="given-name" required></div>
+        <div class="field"><label for="f-email">Seu e-mail</label><input id="f-email" name="entry.836226407" type="email" autocomplete="email" inputmode="email" required></div>
+      </div>
+      <div class="field"><label for="f-perfil">Na sua casa…</label>
+        <select id="f-perfil" name="entry.617988197" required>
+          <option value="">Escolha a que mais combina</option>
+          <option value="familia-filhos">Cuido da comida de uma família com filhos</option>
+          <option value="casal">Moro com parceiro(a), sem filhos</option>
+          <option value="sozinho">Moro sozinho(a)</option>
+          <option value="marmita">Levo marmita pro trabalho</option>
+          <option value="outro">Outro</option>
+        </select>
+      </div>
+      <div class="field"><label for="f-dor">O que mais te incomoda hoje?</label>
+        <select id="f-dor" name="entry.225258447">
+          <option value="">Escolha uma (opcional)</option>
+          <option value="o-que-fazer">Decidir o que fazer todo dia</option>
+          <option value="delivery">Gastar demais com delivery</option>
+          <option value="desperdicio">Comida estragando na geladeira</option>
+          <option value="mercado">Esquecer coisas ou gastar demais no mercado</option>
+          <option value="marmita">Organizar marmitas e lanches</option>
+        </select>
+      </div>
+      <label class="consent"><input type="checkbox" id="f-ok" name="entry.93763132" value="sim" required><span>Aceito receber e-mails do Já Tem sobre o lançamento. Uso seus dados só para isso e você pode sair quando quiser. <a href="#privacidade">Privacidade</a></span></label>
+      <p class="err" id="f-err" role="alert" hidden></p>
+      <button class="btn" type="submit" id="f-btn">Quero entrar na lista</button>
+      <p class="small">Grátis. Sem cartão. Você recebe um aviso quando abrir.</p>
+    </form>
+
+    <div class="form done" id="done" hidden aria-live="polite">
+      <h2>Pronto, você está na lista!</h2>
+      <p>Assim que o Já Tem abrir, você recebe o convite com o preço de fundador.</p>
+      <p><b>Quer chegar antes?</b> Chame quem divide a cozinha com você. A lista é da casa toda.</p>
+      <div class="share"><a class="wa" id="wa" target="_blank" rel="noopener">Mandar no WhatsApp</a><button type="button" id="copy">Copiar link</button></div>
+    </div>
+  </div>
+
+  <div class="phone-wrap" aria-hidden="true">
+    <div>
+      <div class="phone"><div class="screen">
+        <div class="scr-top">Já Tem<small>Terça, 19h12 · o que tem pra janta?</small></div>
+        <div class="scr-body" id="demo">
+          <div class="scr-label">Na sua geladeira</div>
+          <div class="chips">
+            <span class="chip" style="animation-delay:.2s">Frango</span>
+            <span class="chip" style="animation-delay:.35s">Arroz de ontem</span>
+            <span class="chip warn" style="animation-delay:.5s">Tomate · vence amanhã</span>
+            <span class="chip" style="animation-delay:.65s">Ovos</span>
+            <span class="chip" style="animation-delay:.8s">Cebola</span>
+            <span class="chip" style="animation-delay:.95s">Queijo</span>
+          </div>
+          <div class="scr-label" style="margin-top:4px">Dá pra fazer agora</div>
+          <div class="idea" style="animation-delay:1.4s"><b>Arroz de forno com frango</b><span>35 min · usa o arroz de ontem e o tomate</span><br><span class="ok">Tem tudo em casa</span></div>
+          <div class="idea" style="animation-delay:1.8s"><b>Omelete recheada</b><span>15 min · 4 pessoas</span><br><span class="ok">Tem tudo em casa</span></div>
+          <div class="list" style="animation-delay:2.4s">Lista da semana: faltam 7 itens · compartilhada com Rafa</div>
+        </div>
+      </div></div>
+      <p class="demo-cap">Prévia do app. Ingredientes e receitas de exemplo.</p>
+    </div>
+  </div>
+</div>
+
+<section class="blk"><div class="wrap">
+  <p class="eyebrow">Como funciona</p>
+  <h2>Da geladeira ao prato em três passos.</h2>
+  <div class="steps">
+    <div class="step"><h3>Conte o que tem</h3><p>Tire uma foto da geladeira, do cupom do mercado ou mande um áudio. O Já Tem monta sua despensa sozinho.</p></div>
+    <div class="step"><h3>Veja o que dá pra fazer</h3><p>Receitas do dia a dia com o que você já tem, priorizando o que está perto de vencer. Arroz, feijão, mistura e marmita.</p></div>
+    <div class="step"><h3>Compre só o que falta</h3><p>Cardápio da semana e lista de compras por corredor, compartilhada com a família. Comprou, já entra na despensa.</p></div>
+  </div>
+</div></section>
+
+<section class="blk"><div class="wrap">
+  <p class="eyebrow">Por que isso importa</p>
+  <h2>A comida que você já comprou vale dinheiro.</h2>
+  <div class="nums">
+    <div class="num"><b>R$ 66</b><p>é o valor médio de um pedido de delivery, 12,5% a mais que comer no restaurante.</p><a href="https://olhardigital.com.br/2024/07/23/pro/pedir-comida-em-delivery-e-mais-caro-do-que-ir-a-um-restaurante-revela-pesquisa/" target="_blank" rel="noopener">Pesquisa Ticket, 2024</a></div>
+    <div class="num"><b>128 kg</b><p>de comida vão para o lixo por família a cada ano. Arroz, carne e feijão lideram.</p><a href="https://www.hojeemdia.com.br/economiaefinancas/desperdicio-de-alimentos-chega-a-r-1-mil-por-familia-por-ano-diz-embrapa-1.717638" target="_blank" rel="noopener">Embrapa e FGV</a></div>
+    <div class="num"><b>R$ 1 mil</b><p>por ano é o que uma família de três pessoas joga fora em comida.</p><a href="https://www.hojeemdia.com.br/economiaefinancas/desperdicio-de-alimentos-chega-a-r-1-mil-por-familia-por-ano-diz-embrapa-1.717638" target="_blank" rel="noopener">Embrapa e FGV</a></div>
+  </div>
+</div></section>
+
+<section class="blk"><div class="wrap">
+  <p class="eyebrow">Pra quem é</p>
+  <h2>Pra quem cuida da comida da casa.</h2>
+  <div class="who">
+    <div><b>Famílias com filhos</b><p>Cardápio da semana, lancheira da escola e lista que o outro também vê.</p></div>
+    <div><b>Quem trabalha fora</b><p>Ideia pronta pra janta em 15 minutos, antes de abrir o app de delivery.</p></div>
+    <div><b>Quem mora sozinho</b><p>Comprar na medida, aproveitar sobras e parar de jogar comida fora.</p></div>
+    <div><b>Quem leva marmita</b><p>Marmitas da semana planejadas, congeladas e com aviso pra descongelar.</p></div>
+  </div>
+</div></section>
+
+<section class="blk"><div class="wrap">
+  <div class="founder">
+    <div><h2>Preço de fundador para os primeiros 100.</h2><p>Quem entrar na lista agora recebe primeiro o convite para testar e um desconto especial no plano anual.</p></div>
+    <a href="#lista">Garantir meu lugar</a>
+  </div>
+  <div class="faq">
+    <details><summary>Quanto vai custar?</summary><p>Vai ter uma versão grátis com a lista de compras compartilhada. O plano completo deve custar menos que um pedido de delivery por mês. Quem está na lista recebe o preço de fundador.</p></details>
+    <details><summary>Quando lança?</summary><p>Estamos construindo agora. Os primeiros da lista recebem o convite para testar antes do lançamento.</p></details>
+    <details><summary>Preciso baixar na loja?</summary><p>Não. O Já Tem abre pelo navegador e pode ser instalado na tela inicial do celular, como um app.</p></details>
+    <details><summary>Ele monta dieta?</summary><p>Não. O Já Tem organiza a comida da casa e sugere refeições do dia a dia. Para dieta ou restrição médica, procure um nutricionista.</p></details>
+    <details id="privacidade"><summary>O que vocês fazem com meus dados?</summary><p>Guardamos seu nome, e-mail e as respostas deste formulário só para avisar sobre o lançamento e entender quem vai usar o app. Não vendemos nem compartilhamos com ninguém. Para sair da lista ou apagar seus dados, responda qualquer e-mail nosso.</p></details>
+  </div>
+</div></section>
+</main>
+
+<footer><div class="wrap">
+  <span><b>Já Tem</b> · Menos delivery, menos desperdício, menos gasto no mercado.</span>
+  <span>Instagram e TikTok: @jatemapp</span>
+</div></footer>
+
+<script>
+(function(){
+  var q=new URLSearchParams(location.search);
+  document.getElementById('f-origem').value=q.get('utm_source')||q.get('origem')||document.referrer||'direto';
+  var form=document.getElementById('lista'),err=document.getElementById('f-err'),btn=document.getElementById('f-btn');
+  var url=location.origin+location.pathname;
+  var msg='Achei um app que mostra o que dá pra fazer com o que já tem em casa e monta a lista do mercado. Entra na lista comigo: '+url+'?origem=convite';
+  document.getElementById('wa').href='https://wa.me/?text='+encodeURIComponent(msg);
+  document.getElementById('copy').addEventListener('click',function(){
+    var b=this;try{navigator.clipboard.writeText(url+'?origem=convite').then(function(){b.textContent='Link copiado!'},function(){b.textContent=url})}catch(e){b.textContent=url}
+  });
+  function fail(t){err.textContent=t;err.hidden=false}
+  form.addEventListener('submit',function(e){
+    e.preventDefault();err.hidden=true;
+    var nome=document.getElementById('f-nome').value.trim(),email=document.getElementById('f-email').value.trim();
+    if(!nome)return fail('Diga seu nome para a gente te chamar direitinho.');
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email))return fail('Confira o e-mail: parece que falta alguma coisa.');
+    if(!document.getElementById('f-perfil').value)return fail('Escolha a opção que mais combina com a sua casa.');
+    if(!document.getElementById('f-ok').checked)return fail('Marque o aceite para receber o aviso de lançamento.');
+    btn.disabled=true;btn.textContent='Enviando…';
+    function ok(){form.hidden=true;document.getElementById('done').hidden=false;document.getElementById('done').scrollIntoView({block:'center',behavior:'smooth'})}
+    if(document.getElementById('f-hp').value){return ok()}
+    var fd=new FormData(form);fd.delete('empresa');
+    fetch(form.action,{method:'POST',mode:'no-cors',body:new URLSearchParams(fd)})
+      .then(function(){form.hidden=true;document.getElementById('done').hidden=false;document.getElementById('done').scrollIntoView({block:'center',behavior:'smooth'})})
+      .catch(function(){btn.disabled=false;btn.textContent='Quero entrar na lista';fail('Não conseguimos enviar agora. Confira sua internet e tente de novo.')});
+  });
+})();
+</script>
+</body>
+</html>
